@@ -1,8 +1,8 @@
 // Import all functions from put-item.js 
 const lambda = require('../../../src/handlers/put-season.js');
 // Import dynamodb from aws-sdk 
-const dynamodb = require('aws-sdk/clients/dynamodb'); 
- 
+const dynamodb = require('aws-sdk/clients/dynamodb');
+
 // This includes all tests for putItemHandler() 
 describe('Test putSeasonHandler', function () {
     let putSpy; 
@@ -20,8 +20,17 @@ describe('Test putSeasonHandler', function () {
     }); 
  
     // This test invokes putItemHandler() and compare the result  
-    it('should add id to the table', async () => { 
-        const returnedItem = { id: 'id1', species: 'deer' };
+    it('should add id to the table', async () => {
+        const returnedItem = {
+            species: 'deer',
+            subspecies: 'whitetail',
+            antlered: true,
+            controlled: false,
+            regionId: '12-11-01',
+            seasonStart: '11-01-2020',
+            seasonEnd: '11-15-2020',
+            weaponType: 'archery_only'
+        };
  
         // Return the specified value whenever the spied put function is called 
         putSpy.mockReturnValue({ 
@@ -30,7 +39,7 @@ describe('Test putSeasonHandler', function () {
  
         const event = { 
             httpMethod: 'POST', 
-            body: '{"id": "id1","species": "deer"}'
+            body: '{"species":"deer","subspecies":"whitetail","antlered":true,"controlled":false,"regionId":"12-11-01","seasonStart":"11-01-2020","seasonEnd":"11-15-2020","weaponType":"archery_only"}'
         }; 
      
         // Invoke putItemHandler() 
