@@ -4,7 +4,7 @@ const lambda = require('../../../src/handlers/get-season-by-id.js');
 const dynamodb = require('aws-sdk/clients/dynamodb'); 
  
 // This includes all tests for getByIdHandler() 
-describe('Test getByIdHandler', () => { 
+describe('Test getSeasonByIdHandler', () => {
     let getSpy; 
  
     // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown 
@@ -21,7 +21,7 @@ describe('Test getByIdHandler', () => {
  
     // This test invokes getByIdHandler() and compare the result  
     it('should get item by id', async () => { 
-        const item = { id: 'id1' }; 
+        const item = { id: 'id1', species: 'deer' };
  
         // Return the specified value whenever the spied get function is called 
         getSpy.mockReturnValue({ 
@@ -33,13 +33,18 @@ describe('Test getByIdHandler', () => {
             pathParameters: { 
                 id: 'id1' 
             } 
-        } 
+        };
  
         // Invoke getByIdHandler() 
         const result = await lambda.getSeasonByIdHandler(event);
  
         const expectedResult = { 
-            statusCode: 200, 
+            statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+                "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+                "Access-Control-Allow-Methods": "OPTIONS,GET",
+            },
             body: JSON.stringify(item) 
         }; 
  

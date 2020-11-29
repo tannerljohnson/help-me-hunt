@@ -4,7 +4,7 @@ const lambda = require('../../../src/handlers/put-season.js');
 const dynamodb = require('aws-sdk/clients/dynamodb'); 
  
 // This includes all tests for putItemHandler() 
-describe('Test putItemHandler', function () { 
+describe('Test putSeasonHandler', function () {
     let putSpy; 
  
     // Test one-time setup and teardown, see more in https://jestjs.io/docs/en/setup-teardown 
@@ -21,7 +21,7 @@ describe('Test putItemHandler', function () {
  
     // This test invokes putItemHandler() and compare the result  
     it('should add id to the table', async () => { 
-        const returnedItem = { id: 'id1', name: 'name1' }; 
+        const returnedItem = { id: 'id1', species: 'deer' };
  
         // Return the specified value whenever the spied put function is called 
         putSpy.mockReturnValue({ 
@@ -30,13 +30,18 @@ describe('Test putItemHandler', function () {
  
         const event = { 
             httpMethod: 'POST', 
-            body: '{"id": "id1","name": "name1"}' 
+            body: '{"id": "id1","species": "deer"}'
         }; 
      
         // Invoke putItemHandler() 
         const result = await lambda.putSeasonHandler(event);
         const expectedResult = { 
-            statusCode: 200, 
+            statusCode: 200,
+            headers: {
+                "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+                "Access-Control-Allow-Credentials": true, // Required for cookies, authorization headers with HTTPS
+                "Access-Control-Allow-Methods": "OPTIONS,POST",
+            },
             body: JSON.stringify(returnedItem) 
         }; 
  
