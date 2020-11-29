@@ -1,0 +1,9 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "help-me-hunt-app"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-fct4m0r1e5mg"
+s3_prefix = "help-me-hunt-app"
+region = "us-west-2"
+capabilities = "CAPABILITY_IAM"

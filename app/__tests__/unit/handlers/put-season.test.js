@@ -1,5 +1,5 @@
 // Import all functions from put-item.js 
-const lambda = require('../../../src/handlers/put-item.js'); 
+const lambda = require('../../../src/handlers/put-season.js');
 // Import dynamodb from aws-sdk 
 const dynamodb = require('aws-sdk/clients/dynamodb'); 
  
@@ -34,7 +34,7 @@ describe('Test putItemHandler', function () {
         }; 
      
         // Invoke putItemHandler() 
-        const result = await lambda.putItemHandler(event); 
+        const result = await lambda.putSeasonHandler(event);
         const expectedResult = { 
             statusCode: 200, 
             body: JSON.stringify(returnedItem) 

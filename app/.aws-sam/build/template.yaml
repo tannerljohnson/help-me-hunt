@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: help-me-hunt-backend
+Transform:
+- AWS::Serverless-2016-10-31
+Resources:
+  getAllSeasonsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-all-seasons.getAllSeasonsHandler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP get method to get all hutning
+        seasons from a DynamoDB table.
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: SeasonsTable
+      Environment:
+        Variables:
+          SEASONS_TABLE:
+            Ref: SeasonsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /seasons
+            Method: GET
+      CodeUri: getAllSeasonsFunction
+  getSeasonByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/get-season-by-id.getSeasonByIdHandler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP get method to get one hunting
+        season by id from a DynamoDB table.
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: SeasonsTable
+      Environment:
+        Variables:
+          SEASONS_TABLE:
+            Ref: SeasonsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /seasons/{id}
+            Method: GET
+      CodeUri: getSeasonByIdFunction
+  putSeasonFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/put-season.putSeasonHandler
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Timeout: 100
+      Description: A simple example includes a HTTP post method to add one season
+        to a DynamoDB table.
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: SeasonsTable
+      Environment:
+        Variables:
+          SEASONS_TABLE:
+            Ref: SeasonsTable
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /seasons
+            Method: POST
+      CodeUri: putSeasonFunction
+  SeasonsTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+Outputs:
+  WebEndpoint:
+    Description: API Gateway endpoint URL for Prod stage
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/

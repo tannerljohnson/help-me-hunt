@@ -1,5 +1,5 @@
 // Import all functions from get-by-id.js 
-const lambda = require('../../../src/handlers/get-by-id.js'); 
+const lambda = require('../../../src/handlers/get-season-by-id.js');
 // Import dynamodb from aws-sdk 
 const dynamodb = require('aws-sdk/clients/dynamodb'); 
  
@@ -36,7 +36,7 @@ describe('Test getByIdHandler', () => {
         } 
  
         // Invoke getByIdHandler() 
-        const result = await lambda.getByIdHandler(event); 
+        const result = await lambda.getSeasonByIdHandler(event);
  
         const expectedResult = { 
             statusCode: 200, 

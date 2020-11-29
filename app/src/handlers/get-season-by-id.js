@@ -10,7 +10,7 @@ const docClient = new dynamodb.DocumentClient();
 /**
  * A simple example includes a HTTP get method to get one item by id from a DynamoDB table.
  */
-exports.getByIdHandler = async (event) => {
+exports.getSeasonByIdHandler = async (event) => {
   if (event.httpMethod !== 'GET') {
     throw new Error(`getMethod only accept GET method, you tried: ${event.httpMethod}`);
   }
