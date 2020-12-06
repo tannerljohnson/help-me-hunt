@@ -29,7 +29,7 @@ describe('Test getAllSeasonsHandler', () => {
  
         const event = { 
             httpMethod: 'GET' 
-        } 
+        };
  
         // Invoke helloFromLambdaHandler() 
         const result = await lambda.getAllSeasonsHandler(event);
