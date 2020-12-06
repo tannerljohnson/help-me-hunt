@@ -29,7 +29,10 @@ describe('Test putSeasonHandler', function () {
             regionId: '12-11-01',
             seasonStart: '11-01-2020',
             seasonEnd: '11-15-2020',
-            weaponType: 'archery_only'
+            weaponType: 'archery_only',
+            state: 'Idaho',
+            youthOnly: false,
+            privateLandOnly: false,
         };
  
         // Return the specified value whenever the spied put function is called 
@@ -39,7 +42,7 @@ describe('Test putSeasonHandler', function () {
  
         const event = { 
             httpMethod: 'POST', 
-            body: '{"species":"deer","subspecies":"whitetail","antlered":true,"controlled":false,"regionId":"12-11-01","seasonStart":"11-01-2020","seasonEnd":"11-15-2020","weaponType":"archery_only"}'
+            body: '{"species":"deer","subspecies":"whitetail","antlered":true,"controlled":false,"regionId":"12-11-01","seasonStart":"11-01-2020","seasonEnd":"11-15-2020","weaponType":"archery_only","state":"Idaho","youthOnly":false,"privateLandOnly":false}'
         }; 
      
         // Invoke putItemHandler() 

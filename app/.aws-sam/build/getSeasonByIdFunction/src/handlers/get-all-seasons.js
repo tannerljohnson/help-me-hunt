@@ -16,27 +16,47 @@ exports.getAllSeasonsHandler = async (event) => {
     }
     // All log statements are written to CloudWatch
     console.info('received:', event);
-    const { species, state } = event.queryStringParameters;
 
-    // get all items from the table (only first 1MB data, you can use `LastEvaluatedKey` to get the rest of data)
-    // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property
-    // https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html
-    const params = {
-        // TODO: scope down attrs to get
-        // AttributesToGet: [
-        //     "password"
-        // ],
-        TableName : tableName,
-        FilterExpression: '#state = :state AND #species = :species',
-        ExpressionAttributeNames: {
-            '#state': 'state',
-            '#species': 'species',
-        },
-        ExpressionAttributeValues: {
-            ':state': state,
-            ':species': species,
-        },
+    const allowedSearchParams = ['species', 'state', 'youthOnly'];
+    const sentSearchParams = Object.keys(event.queryStringParameters);
+    if (sentSearchParams.filter(s => !allowedSearchParams.includes(s)).length > 0) {
+        throw new Error(`received unknown query params: ${event.queryStringParameters}`);
+    }
+
+    const { species, state, youthOnly } = event.queryStringParameters;
+    let attributeNames = {};
+    let attributeValues = {};
+    let filterExpression = [];
+
+    if (species) {
+        attributeNames['#species'] = 'species';
+        attributeValues[':species'] = species;
+        filterExpression.push('#species = :species');
+    }
+    if (state) {
+        attributeNames['#state'] = 'state';
+        attributeValues[':state'] = state;
+        filterExpression.push('#state = :state');
+    }
+    if (youthOnly) {
+        attributeNames['#youthOnly'] = 'youthOnly';
+        attributeValues[':youthOnly'] = youthOnly === 'true';
+        filterExpression.push('#youthOnly = :youthOnly');
+    }
+
+    filterExpression = filterExpression.join(' AND ');
+
+    let params = {
+        TableName: tableName,
     };
+
+    if (!!filterExpression) {
+        params.FilterExpression = filterExpression;
+        params.ExpressionAttributeNames = attributeNames;
+        params.ExpressionAttributeValues = attributeValues;
+    }
+
+
     const data = await docClient.scan(params).promise();
     const items = data.Items;
 
