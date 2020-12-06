@@ -12,16 +12,41 @@ export const capitalize = s => {
 
 // TODO: join in backend based on state, this is only for Idaho
 const convertRegion = regionId => {
-  const [_stateId, region, subRegion] = regionId.split('-');
+  const [,region, subRegion] = regionId.split('-');
   const subRegionIndex = parseInt(subRegion) + 1;
   const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';
   const computedSubRegion = subRegionIndex > 0 ? ALPHABET[subRegionIndex - 1].toUpperCase() : '';
   return parseInt(region) + computedSubRegion;
 };
 
+const getRegionRank = regionId => {
+  const [,region, subRegion] = regionId.split('-');
+  const subRegionIndex = parseInt(subRegion);
+  return parseInt(region) + (subRegionIndex / 10);
+};
+
 const humanReadableDate = dateString => {
   const d = new Date(dateString);
   return d.toDateString();
+};
+
+const byRegion = (a, b) => (a.regionRank > b.regionRank) ? 1 : ((a.regionRank < b.regionRank) ? -1 : 0);
+
+// TODO: do this in lambda layer
+const parseResults = results => {
+  let parsed = [];
+  results.forEach(result => {
+    const rawRegionId = result.regionId;
+    result.seasonStart = humanReadableDate(result.seasonStart);
+    result.seasonEnd = humanReadableDate(result.seasonEnd);
+    result.regionId = convertRegion(rawRegionId);
+    result.species = capitalize(result.species);
+    result.subspecies = result.subspecies ? capitalize(result.subspecies) : 'Any';
+    result.weaponType = capitalize(result.weaponType);
+    result.regionRank = getRegionRank(rawRegionId);
+    parsed.push(result);
+  });
+  return parsed.sort(byRegion);
 };
 
 const Home = () => {
@@ -70,7 +95,8 @@ const Home = () => {
       </Form>
       <Button disabled={loading} onClick={async () => {
         const results = await fetchSeasons();
-        setSearchResults(results);
+        const parsed = parseResults(results);
+        setSearchResults(parsed);
       }}>
         {loading ? (
           <>
@@ -90,12 +116,12 @@ const Home = () => {
           searchResults.map(result => (
               <Card key={result.id} style={{ marginTop: '15px' }}>
                 <CardBody>
-                  <CardTitle>Region: {convertRegion(result.regionId)}</CardTitle>
+                  <CardTitle>Region: {result.regionId}</CardTitle>
                   <CardSubtitle style={{ paddingTop: '8px' }}>
-                    {capitalize(result.species)} ({result.subspecies ? capitalize(result.subspecies) : 'Any'})
+                    {result.species} ({result.subspecies})
                   </CardSubtitle>
                   <div>
-                    Season: {humanReadableDate(result.seasonStart)} - {humanReadableDate(result.seasonEnd)}
+                    Season: {result.seasonStart} - {result.seasonEnd}
                   </div>
                   <div>
                     Weapon type: {capitalize(result.weaponType)}
