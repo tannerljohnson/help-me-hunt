@@ -30,6 +30,8 @@ exports.putSeasonHandler = async (event) => {
     const seasonEnd = body.seasonEnd;
     const weaponType = body.weaponType;
     const state = body.state;
+    const youthOnly = body.youthOnly;
+    const privateLandOnly = body.privateLandOnly;
 
     // Creates a new item, or replaces an old item with a new item
     // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
@@ -45,7 +47,9 @@ exports.putSeasonHandler = async (event) => {
             seasonStart: seasonStart,
             seasonEnd: seasonEnd,
             weaponType: weaponType,
-            state: state
+            state: state,
+            youthOnly: youthOnly,
+            privateLandOnly: privateLandOnly
         }
     };
 
