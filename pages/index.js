@@ -126,6 +126,11 @@ const Home = () => {
                   <div>
                     Weapon type: {capitalize(result.weaponType)}
                   </div>
+                  {result.youthOnly && (
+                    <div>
+                      *Youth only
+                    </div>
+                  )}
                 </CardBody>
               </Card>
             )
