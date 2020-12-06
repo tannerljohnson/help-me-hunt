@@ -26,8 +26,9 @@ const getRegionRank = regionId => {
 };
 
 const humanReadableDate = dateString => {
-  const d = new Date(dateString);
-  return d.toDateString();
+  // const d = new Date(dateString);
+  // return d.toDateString();
+  return dateString;
 };
 
 const byRegion = (a, b) => (a.regionRank > b.regionRank) ? 1 : ((a.regionRank < b.regionRank) ? -1 : 0);
