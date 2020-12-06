@@ -4,6 +4,7 @@ import { Button, FormSelect, Form, FormGroup, CardBody, CardTitle, CardSubtitle,
 
 export const BASE_ENDPOINT = 'https://cqiqnxsapf.execute-api.us-west-2.amazonaws.com/Prod';
 export const DEFAULT_STATE = 'Idaho';
+export const DEFAULT_SPECIES = 'deer';
 export const capitalize = s => {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -12,7 +13,7 @@ export const capitalize = s => {
 const Home = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [stateSelection, setStateSelection] = useState(DEFAULT_STATE);
-  const [speciesSelection, setSpeciesSelection] = useState(DEFAULT_STATE);
+  const [speciesSelection, setSpeciesSelection] = useState(DEFAULT_SPECIES);
   const [loading, setLoading] = useState(false);
 
   const fetchSeasons = async () => {

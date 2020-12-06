@@ -16,12 +16,26 @@ exports.getAllSeasonsHandler = async (event) => {
     }
     // All log statements are written to CloudWatch
     console.info('received:', event);
+    const { species, state } = event.queryStringParameters;
 
     // get all items from the table (only first 1MB data, you can use `LastEvaluatedKey` to get the rest of data)
     // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property
     // https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html
     const params = {
-        TableName : tableName
+        // TODO: scope down attrs to get
+        // AttributesToGet: [
+        //     "password"
+        // ],
+        TableName : tableName,
+        FilterExpression: '#state = :state AND #species = :species',
+        ExpressionAttributeNames: {
+            '#state': 'state',
+            '#species': 'species',
+        },
+        ExpressionAttributeValues: {
+            ':state': state,
+            ':species': species,
+        },
     };
     const data = await docClient.scan(params).promise();
     const items = data.Items;

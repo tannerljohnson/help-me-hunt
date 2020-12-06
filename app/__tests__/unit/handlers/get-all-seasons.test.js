@@ -11,7 +11,7 @@ describe('Test getAllSeasonsHandler', () => {
     beforeAll(() => { 
         // Mock dynamodb get and put methods 
         // https://jestjs.io/docs/en/jest-object.html#jestspyonobject-methodname 
-        scanSpy = jest.spyOn(dynamodb.DocumentClient.prototype, 'scan'); 
+        scanSpy = jest.spyOn(dynamodb.DocumentClient.prototype, 'scan');
     }); 
  
     // Clean up mocks 
@@ -20,7 +20,7 @@ describe('Test getAllSeasonsHandler', () => {
     }); 
  
     it('should return ids', async () => { 
-        const items = [{ id: 'id1', species: 'deer' }, { id: 'id2', species: 'deer' }];
+        const items = [{ id: 'id1', species: 'deer', state: 'Idaho' }, { id: 'id2', species: 'deer', state: 'Idaho' }];
  
         // Return the specified value whenever the spied scan function is called 
         scanSpy.mockReturnValue({ 
@@ -28,7 +28,8 @@ describe('Test getAllSeasonsHandler', () => {
         }); 
  
         const event = { 
-            httpMethod: 'GET' 
+            httpMethod: 'GET',
+            queryStringParameters: { state: 'Idaho', species: 'deer' }
         };
  
         // Invoke helloFromLambdaHandler() 

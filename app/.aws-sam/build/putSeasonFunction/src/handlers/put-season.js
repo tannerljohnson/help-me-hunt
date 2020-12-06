@@ -20,7 +20,6 @@ exports.putSeasonHandler = async (event) => {
 
     // Get id and name from the body of the request
     const body = JSON.parse(event.body);
-    // const id = body.id;
     const id = uuidv4();
     const species = body.species;
     const subspecies = body.subspecies || null;
@@ -30,6 +29,7 @@ exports.putSeasonHandler = async (event) => {
     const seasonStart = body.seasonStart;
     const seasonEnd = body.seasonEnd;
     const weaponType = body.weaponType;
+    const state = body.state;
 
     // Creates a new item, or replaces an old item with a new item
     // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property
@@ -44,7 +44,8 @@ exports.putSeasonHandler = async (event) => {
             regionId: regionId,
             seasonStart: seasonStart,
             seasonEnd: seasonEnd,
-            weaponType: weaponType
+            weaponType: weaponType,
+            state: state
         }
     };
 
